@@ -54,6 +54,7 @@ export const logIn = createAsyncThunk(
     try {
       const { data } = await biteTodoInnstance.post('/auth/login', credentials);
       setAuthHeader(data.tokens.accessToken);
+
       return data;
     } catch (error) {
       return thunkAPI.rejectWithValue({
@@ -64,9 +65,9 @@ export const logIn = createAsyncThunk(
   }
 );
 
-export const logOut = createAsyncThunk('auth/logOut', async (_, thunkAPI) => {
+export const logOut = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
   try {
-    await biteTodoInnstance.post('/auth/logout');
+    await biteTodoInnstance.get('/auth/logout');
     clearAuthHeader();
   } catch (error) {
     return thunkAPI.rejectWithValue({
@@ -77,12 +78,12 @@ export const logOut = createAsyncThunk('auth/logOut', async (_, thunkAPI) => {
 });
 
 export const refreshUser = createAsyncThunk(
-  'auth/refresh',
+  'auth/refreshuser',
   async (_, thunkAPI) => {
     const state = thunkAPI.getState();
-    const persistedToken = state.auth.accessToken;
+    const persistedAccessToken = state.auth.accessToken;
 
-    if (persistedToken === null) {
+    if (persistedAccessToken === null) {
       return thunkAPI.rejectWithValue({
         message: 'Unable to fetch user',
         status: '',
@@ -90,7 +91,7 @@ export const refreshUser = createAsyncThunk(
     }
 
     try {
-      setAuthHeader(persistedToken);
+      setAuthHeader(persistedAccessToken);
       const { data } = await biteTodoInnstance.get('/auth/current');
       return data;
     } catch (error) {
@@ -103,19 +104,22 @@ export const refreshUser = createAsyncThunk(
 );
 
 export const refreshToken = createAsyncThunk(
-  'auth/refreshtoken',
+  'auth/refresh',
   async (_, thunkAPI) => {
     const state = thunkAPI.getState();
-    const persistToken = state.auth.refreshToken;
+    const persistedRefreshToken = state.auth.refreshToken;
 
-    if (persistToken === null) {
-      return thunkAPI.rejectWithValue();
+    if (persistedRefreshToken === null) {
+      return thunkAPI.rejectWithValue({
+        message: 'Unable to fetch user',
+        status: '',
+      });
     }
 
     try {
-      const { data } = await biteTodoInnstance.post('/auth/refresh', {
-        refreshToken: persistToken,
-      });
+      setAuthHeader(persistedRefreshToken);
+      const { data } = await biteTodoInnstance.get('/auth/refresh');
+      setAuthHeader(data.accessToken);
       return data;
     } catch (error) {
       return thunkAPI.rejectWithValue({

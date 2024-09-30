@@ -46,34 +46,36 @@ export const App = () => {
   }, [searchParams, dispatch]);
 
   useEffect(() => {
-    const { message, status } = authError;
-    if (!message) return;
+    if (authError) {
+      const { message, status } = authError;
+      if (!message) return;
 
-    if (message === 'Unable to fetch user') return;
+      if (message === 'Unable to fetch user') return;
 
-    Notify.init({
-      fontFamily: 'Poppins',
-      timeout: 4000,
-      clickToClose: true,
-      warning: {
-        background: '#ff5549',
-      },
-    });
+      Notify.init({
+        fontFamily: 'Poppins',
+        timeout: 4000,
+        clickToClose: true,
+        warning: {
+          background: '#ff5549',
+        },
+      });
 
-    if (status === 403) {
-      dispatch(forcedLogout());
+      if (status === 403) {
+        dispatch(forcedLogout());
+      }
+
+      if (
+        message === 'Invalid token' ||
+        message === 'Unsupported token' ||
+        (status === 401 && message !== 'Email or password invalid')
+      ) {
+        Notify.warning('Please login again');
+        return;
+      }
+
+      Notify.warning(`${authError.message}`);
     }
-
-    if (
-      message === 'Invalid token' ||
-      message === 'Unsupported token' ||
-      (status === 401 && message !== 'Email or password invalid')
-    ) {
-      Notify.warning('Please login again');
-      return;
-    }
-
-    Notify.warning(`${authError.message}`);
   }, [dispatch, authError]);
 
   useEffect(() => {
@@ -85,7 +87,12 @@ export const App = () => {
       setCurrTheme({ ...theme.light, devices, baseTransition, priority });
     }
     if (selectedTheme.toLowerCase() === 'violet') {
-      setCurrTheme({ ...theme.violet, devices, baseTransition, priority });
+      setCurrTheme({
+        ...theme.violet,
+        devices,
+        baseTransition,
+        priority,
+      });
     }
   }, [selectedTheme]);
 

@@ -4,9 +4,9 @@ import {
   logIn,
   logOut,
   refreshUser,
-  refreshToken,
   updateUser,
   updateAvatar,
+  refreshToken,
 } from './operations';
 
 const initialState = {
@@ -35,8 +35,8 @@ const authSlice = createSlice({
         avatarURL: '',
         theme: 'dark',
       };
-      state.accessToken = null;
       state.refreshToken = null;
+      state.accessToken = null;
       state.isLoggedIn = false;
       state.error = { message: '', status: '' };
     },
@@ -73,13 +73,25 @@ const authSlice = createSlice({
         state.error = { message: '', status: '' };
       })
       .addCase(logIn.rejected, (state, { payload }) => {
-        state.user = { name: '', email: '', avatarURL: '', theme: 'dark' };
+        state.user = {
+          name: '',
+          email: '',
+          avatarURL: '',
+          theme: 'dark',
+        };
+        state.accessToken = null;
+        state.refreshToken = null;
         state.isRefreshing = false;
         state.isLoggedIn = false;
         state.error = payload;
       })
       .addCase(logOut.fulfilled, state => {
-        state.user = { name: '', email: '', avatarURL: '', theme: 'dark' };
+        state.user = {
+          name: '',
+          email: '',
+          avatarURL: '',
+          theme: 'dark',
+        };
         state.accessToken = null;
         state.refreshToken = null;
         state.isLoggedIn = false;
@@ -104,15 +116,18 @@ const authSlice = createSlice({
         state.isLoggedIn = false;
         state.error = payload;
       })
-      .addCase(refreshToken.pending, (state, { payload }) => {
+      .addCase(refreshToken.pending, state => {
+        state.isRefreshing = true;
+        state.isLoggedIn = true;
         state.error = { message: '', status: '' };
       })
       .addCase(refreshToken.fulfilled, (state, { payload }) => {
         state.accessToken = payload.accessToken;
         state.refreshToken = payload.refreshToken;
-        state.error = { message: '', status: '' };
       })
       .addCase(refreshToken.rejected, (state, { payload }) => {
+        state.isRefreshing = false;
+        state.isLoggedIn = false;
         state.error = payload;
       })
       .addCase(updateUser.pending, state => {

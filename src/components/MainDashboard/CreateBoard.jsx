@@ -10,7 +10,7 @@ const CreateBoard = () => {
   return (
     <>
       <CreateBoardContainer>
-        Before starting your project, it is essential{' '}
+        Before starting your project, it is essential
         <CreateBoardButton type="button" onClick={openModal}>
           to create a board
         </CreateBoardButton>
