@@ -14,6 +14,7 @@ const initialState = {
     name: '',
     email: '',
     avatarURL: '',
+    avatarURLsmall: '',
     theme: 'dark',
   },
   accessToken: null,
@@ -33,6 +34,7 @@ const authSlice = createSlice({
         name: '',
         email: '',
         avatarURL: '',
+        avatarURLsmall: '',
         theme: 'dark',
       };
       state.refreshToken = null;
@@ -77,6 +79,7 @@ const authSlice = createSlice({
           name: '',
           email: '',
           avatarURL: '',
+          avatarURLsmall: '',
           theme: 'dark',
         };
         state.accessToken = null;
@@ -90,6 +93,7 @@ const authSlice = createSlice({
           name: '',
           email: '',
           avatarURL: '',
+          avatarURLsmall: '',
           theme: 'dark',
         };
         state.accessToken = null;
@@ -144,7 +148,10 @@ const authSlice = createSlice({
         state.error = payload;
       })
       .addCase(updateAvatar.fulfilled, (state, { payload }) => {
-        state.user.avatarURL = payload;
+        console.log('Avatars: ', payload);
+
+        state.user.avatarURL = payload.avatarURL;
+        state.user.avatarURLsmall = payload.avatarURLsmall;
         state.error = { message: '', status: '' };
       })
       .addCase(updateAvatar.rejected, (state, { payload }) => {

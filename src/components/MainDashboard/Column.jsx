@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
-import { Draggable } from 'react-beautiful-dnd';
 import { deleteColumn } from '../../store/columns/operations';
 import { useAskDeleteModal, useModal } from 'hooks/useModal';
 import { Modal } from 'components/Modal';
 import { ColumnForm } from './ColumnForm';
-
 import {
   ColumnContainer,
   ColumnTitleContainer,
@@ -60,69 +58,65 @@ export const Column = ({ _id, title, cards, owner, index }) => {
   };
 
   return (
-    <Draggable draggableId={_id} index={index}>
-      {provided => (
-        <ColumnContainer ref={provided.innerRef} {...provided.draggableProps}>
-          <ColumnTitleContainer {...provided.dragHandleProps}>
-            <ColumnTitle>{title}</ColumnTitle>
-            <IconContainer>
-              <ButtonIcon
-                ariaLabel="edit"
-                action={() => handleEditCardButtonClick(openModal)}
-                w={16}
-                h={16}
-                icon="pencil"
-              />
-              <ButtonIcon
-                ariaLabel="delete"
-                action={handleDeleteColumnEmty}
-                w={16}
-                h={16}
-                icon="trash"
-              />
-            </IconContainer>
-          </ColumnTitleContainer>
-          {cards && <CardList boardId={owner} columnId={_id} cards={cards} />}
-          <PrimaryButton
-            type="button"
-            action={handleAddCardButtonClick}
-            title="Add another card"
-          >
-            <IconAddEditDeleteModal />
-          </PrimaryButton>
-          {isModalOpen && isEditCardMode && (
-            <Modal onClose={closeModal}>
-              <ColumnForm
-                id={_id}
-                boardId={owner}
-                onCloseForm={closeModal}
-                columnTitle={title}
-                isEditMode={true}
-              />
-            </Modal>
-          )}
-          {isModalOpen && !isEditCardMode && (
-            <Modal onClose={closeModal}>
-              <AddTasks
-                boardId={owner}
-                columnId={_id}
-                closeModal={closeModal}
-                index={index}
-                cardsNumber={cards.length}
-              />
-            </Modal>
-          )}
-          {isAskDeleteModalOpen && (
-            <Modal onClose={closeAskDeleteModal}>
-              <AskDeleteModal
-                onClick={closeAskDeleteModal}
-                handleDelete={handleDeleteColumnFull}
-                title={titleColumn}
-              />
-            </Modal>
-          )}
-        </ColumnContainer>
+    <ColumnContainer>
+      <ColumnTitleContainer>
+        <ColumnTitle>{title}</ColumnTitle>
+        <IconContainer>
+          <ButtonIcon
+            ariaLabel="edit"
+            action={() => handleEditCardButtonClick(openModal)}
+            w={16}
+            h={16}
+            icon="pencil"
+          />
+          <ButtonIcon
+            ariaLabel="delete"
+            action={handleDeleteColumnEmty}
+            w={16}
+            h={16}
+            icon="trash"
+          />
+        </IconContainer>
+      </ColumnTitleContainer>
+      {cards && <CardList boardId={owner} columnId={_id} cards={cards} />}
+      <PrimaryButton
+        type="button"
+        action={handleAddCardButtonClick}
+        title="Add another card"
+      >
+        <IconAddEditDeleteModal />
+      </PrimaryButton>
+      {isModalOpen && isEditCardMode && (
+        <Modal onClose={closeModal}>
+          <ColumnForm
+            id={_id}
+            boardId={owner}
+            onCloseForm={closeModal}
+            columnTitle={title}
+            isEditMode={true}
+          />
+        </Modal>
       )}
-    </Draggable>
+      {isModalOpen && !isEditCardMode && (
+        <Modal onClose={closeModal}>
+          <AddTasks
+            boardId={owner}
+            columnId={_id}
+            closeModal={closeModal}
+            index={index}
+            cardsNumber={cards.length}
+          />
+        </Modal>
+      )}
+      {isAskDeleteModalOpen && (
+        <Modal onClose={closeAskDeleteModal}>
+          <AskDeleteModal
+            onClick={closeAskDeleteModal}
+            handleDelete={handleDeleteColumnFull}
+            title={titleColumn}
+          />
+        </Modal>
+      )}
+    </ColumnContainer>
   );
 };

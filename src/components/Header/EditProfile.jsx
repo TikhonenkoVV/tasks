@@ -50,19 +50,24 @@ const EditProfile = ({ closeModal }) => {
         <DivUserImgStyled>
           {previewAvatar ? (
             <AvatarImg
-              width={68}
-              height={68}
+              width={250}
+              height={250}
               src={previewAvatar}
               alt="userlogo"
             />
           ) : avatarURL ? (
-            <AvatarImg width={68} height={68} src={avatarURL} alt="userlogo" />
+            <AvatarImg
+              width={250}
+              height={250}
+              src={avatarURL}
+              alt="userlogo"
+            />
           ) : (
-            <Svg w={68} h={68} icon="user" />
+            <Svg w={250} h={250} icon="user" />
           )}
           <input
-            width={68}
-            height={68}
+            width={250}
+            height={250}
             type="file"
             accept="image/*"
             onChange={handleAvatarChange}
