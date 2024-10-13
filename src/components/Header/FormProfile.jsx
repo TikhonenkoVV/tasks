@@ -23,6 +23,14 @@ const FormProfie = ({ avatarFile, onAvatarChange }) => {
 
   const [showPassword, setShowPassword] = useState(false);
 
+  const validateValues = values => {
+    const validValues = {};
+    if (values.name) validValues.name = values.name;
+    if (values.email) validValues.email = values.email;
+    if (values.password !== '') validValues.password = values.password;
+    return validValues;
+  };
+
   return (
     <Formik
       initialValues={{ name, email, password: '' }}
@@ -32,7 +40,7 @@ const FormProfie = ({ avatarFile, onAvatarChange }) => {
           dispatch(updateAvatar(avatarFile));
         }
 
-        dispatch(updateUser(values));
+        dispatch(updateUser(validateValues(values)));
         onAvatarChange();
         resetForm();
       }}
